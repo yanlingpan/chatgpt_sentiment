@@ -52,10 +52,6 @@ title2occupation_df = pd.read_csv(Path(data_dir, 'title2occupation.csv')).drop_d
 ambiguous = set(title2occupation_df[title2occupation_df.key.duplicated()].key.tolist())
 unambiguous = set(title2occupation_df.key.tolist()) - ambiguous
 
-print(f'all title-occupation pair:{len(title2occupation_df)}\
-      \tunambiguious titles:{len(unambiguous)}\
-      \tambiguous titles:{len(ambiguous)}')
-
 # each ambiguous titles have a default fallback occupation value, 
 # in case disambiguation doesnot work
 title2occupation_df = title2occupation_df.drop_duplicates(subset=['key'])
@@ -63,21 +59,13 @@ title2occupation_dict = pd.Series(title2occupation_df.occupation.values, index=t
 soc_set_title = list(title2occupation_dict.keys())
 assert (unambiguous | ambiguous) == set(soc_set_title)
 
-print(f'\nambiguious title defaults:\n')
-print(f"{'title'.ljust(15)}occupation\n{'-'*30}")
-for title in ambiguous:
-  print(f"{title:15}{title2occupation_dict[title]}")
-
 # modifier2occupation
 modifier2occupation = pd.read_csv(Path(data_dir, 'modifier2occupation.csv'))
 modifier2occupation = dict(zip(list(modifier2occupation.modifier),list(modifier2occupation.occupation)))
-print(len(modifier2occupation.keys()))
-set(modifier2occupation.values())
 
 # keyword2occupation
 keyword2occupation = pd.read_csv(Path(data_dir, 'keyword2occupation.csv'))
 keyword2occupation = dict(zip(list(keyword2occupation.keyword),list(keyword2occupation.occupation)))
-print(len(keyword2occupation.keys()))
 
 
 def disambiguate(modifier):
